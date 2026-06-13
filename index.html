@@ -13,439 +13,459 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{
-  --bg:#F2F2F7;--surface:#FFFFFF;--surface2:#F2F2F7;
-  --border:rgba(0,0,0,0.1);--text:#000000;--muted:#6C6C70;--hint:#AEAEB2;
+  --bg:#F2F2F7;--surface:#FFFFFF;--border:rgba(0,0,0,0.1);--text:#000000;--muted:#6C6C70;--hint:#AEAEB2;
   --ok:#34C759;--ok-bg:#E8FAF0;--ok-text:#1A6B35;
   --warn:#FF9F0A;--warn-bg:#FFF5E0;--warn-text:#7A4A00;
   --danger:#FF3B30;--danger-bg:#FFF0EF;--danger-text:#8B1A14;
   --blue:#007AFF;--blue-bg:#EBF4FF;--blue-text:#003D80;
+  --purple:#AF52DE;--purple-bg:#F5EEFF;--purple-text:#5B2D8E;
   --accent:#007AFF;--r:12px;--r-sm:8px;--safe-bottom:env(safe-area-inset-bottom,0px);
 }
 @media(prefers-color-scheme:dark){:root{
-  --bg:#000000;--surface:#1C1C1E;--surface2:#2C2C2E;
-  --border:rgba(255,255,255,0.1);--text:#FFFFFF;--muted:#8E8E93;--hint:#48484A;
+  --bg:#000;--surface:#1C1C1E;--border:rgba(255,255,255,0.1);--text:#FFF;--muted:#8E8E93;--hint:#48484A;
   --ok:#30D158;--ok-bg:rgba(48,209,88,0.15);--ok-text:#30D158;
   --warn:#FFD60A;--warn-bg:rgba(255,214,10,0.15);--warn-text:#FFD60A;
   --danger:#FF453A;--danger-bg:rgba(255,69,58,0.15);--danger-text:#FF453A;
   --blue:#0A84FF;--blue-bg:rgba(10,132,255,0.15);--blue-text:#0A84FF;
+  --purple:#BF5AF2;--purple-bg:rgba(191,90,242,0.15);--purple-text:#BF5AF2;
 }}
-
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;font-size:15px}
-
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif;font-size:15px}
 .app{display:flex;flex-direction:column;height:100%;max-width:430px;margin:0 auto}
-
-/* Scroll area */
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;
-  padding-bottom:calc(80px + var(--safe-bottom))}
-
-/* Header */
-.hdr{background:var(--surface);padding:56px 20px 14px;
-  border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:50}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding-bottom:calc(80px + var(--safe-bottom))}
+.hdr{background:var(--surface);padding:52px 20px 12px;border-bottom:0.5px solid var(--border);position:sticky;top:0;z-index:50}
 .hdr-row{display:flex;align-items:center;justify-content:space-between}
-.hdr-name{font-size:20px;font-weight:700;letter-spacing:-0.4px}
+.hdr-name{font-size:19px;font-weight:700;letter-spacing:-0.4px}
 .hdr-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.score-pill{background:var(--blue-bg);color:var(--blue-text);font-size:15px;
-  font-weight:700;padding:7px 16px;border-radius:20px;letter-spacing:-0.3px}
-
-/* Bottom nav */
-.nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);
-  border-top:0.5px solid var(--border);display:flex;
-  padding-bottom:var(--safe-bottom);z-index:100;max-width:430px;margin:0 auto}
-.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;
-  padding:10px 4px 8px;cursor:pointer;border:none;background:none;
-  color:var(--muted);font-size:10px;font-weight:500;gap:4px;transition:color 0.15s}
-.nav-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.score-pill{background:var(--warn-bg);color:var(--warn-text);font-size:15px;font-weight:700;padding:7px 16px;border-radius:20px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:var(--surface);border-top:0.5px solid var(--border);display:flex;padding-bottom:var(--safe-bottom);z-index:100;max-width:430px;margin:0 auto}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:9px 2px 7px;cursor:pointer;border:none;background:none;color:var(--muted);font-size:9px;font-weight:500;gap:3px;transition:color 0.15s}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .nav-btn.active{color:var(--accent)}
-
-/* Pages */
-.page{display:none;padding:12px 16px 0}
-.page.active{display:block}
-
-/* Section */
-.sec-title{font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;
-  color:var(--hint);margin:20px 0 8px 4px}
+.page{display:none;padding:12px 16px 0}.page.active{display:block}
+.sec-title{font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--hint);margin:18px 0 8px 4px}
 .sec-title:first-child{margin-top:8px}
-
-/* Card list */
 .card{background:var(--surface);border-radius:var(--r);overflow:hidden;margin-bottom:8px}
-.cell{display:flex;align-items:center;padding:12px 16px;gap:12px;
-  border-bottom:0.5px solid var(--border)}
+.cell{display:flex;align-items:center;padding:11px 16px;gap:12px;border-bottom:0.5px solid var(--border)}
 .cell:last-child{border-bottom:none}
-.cell-ico{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;
-  justify-content:center;font-size:17px;flex-shrink:0}
+.cell-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .cell-body{flex:1;min-width:0}
 .cell-label{font-size:14px;font-weight:500;color:var(--text)}
 .cell-sub{font-size:12px;color:var(--muted);margin-top:1px;line-height:1.3}
 .cell-right{text-align:right;flex-shrink:0}
 .val{font-size:17px;font-weight:600}
 .val-unit{font-size:11px;color:var(--muted);margin-top:1px}
-.ok{color:var(--ok-text)} .warn{color:var(--warn-text)} .danger{color:var(--danger-text)} .blue{color:var(--blue-text)}
-
-/* Metric grid */
+.ok{color:var(--ok-text)}.warn{color:var(--warn-text)}.danger{color:var(--danger-text)}
 .mgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-.mc{background:var(--surface);border-radius:var(--r);padding:14px}
-.mc-label{font-size:12px;color:var(--muted);margin-bottom:5px}
-.mc-val{font-size:26px;font-weight:700;letter-spacing:-0.5px;line-height:1}
-.mc-norm{font-size:11px;color:var(--hint);margin-top:5px}
-.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;
-  border-radius:20px;margin-top:6px}
-.b-ok{background:var(--ok-bg);color:var(--ok-text)}
-.b-warn{background:var(--warn-bg);color:var(--warn-text)}
-.b-danger{background:var(--danger-bg);color:var(--danger-text)}
-.b-blue{background:var(--blue-bg);color:var(--blue-text)}
-
-/* Alerts */
-.alert{border-radius:var(--r);padding:14px;margin-bottom:10px;display:flex;gap:10px}
-.alert-danger{background:var(--danger-bg);border:1px solid var(--danger)}
-.alert-warn{background:var(--warn-bg);border:1px solid var(--warn)}
-.alert-ico{font-size:20px;flex-shrink:0;margin-top:1px}
-.alert-title{font-size:13px;font-weight:700;color:var(--danger-text)}
-.alert-title-warn{font-size:13px;font-weight:700;color:var(--warn-text)}
+.mc{background:var(--surface);border-radius:var(--r);padding:13px}
+.mc-label{font-size:11px;color:var(--muted);margin-bottom:4px}
+.mc-val{font-size:24px;font-weight:700;letter-spacing:-0.5px;line-height:1}
+.mc-norm{font-size:10px;color:var(--hint);margin-top:4px}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;margin-top:5px}
+.b-ok{background:var(--ok-bg);color:var(--ok-text)}.b-warn{background:var(--warn-bg);color:var(--warn-text)}
+.b-danger{background:var(--danger-bg);color:var(--danger-text)}.b-blue{background:var(--blue-bg);color:var(--blue-text)}
+.b-purple{background:var(--purple-bg);color:var(--purple-text)}
+.alert{border-radius:var(--r);padding:13px;margin-bottom:10px;display:flex;gap:10px}
+.a-danger{background:var(--danger-bg);border:1px solid var(--danger)}
+.a-warn{background:var(--warn-bg);border:1px solid var(--warn)}
+.a-ok{background:var(--ok-bg);border:1px solid var(--ok)}
+.a-purple{background:var(--purple-bg);border:1px solid var(--purple)}
+.a-blue{background:var(--blue-bg);border:1px solid var(--blue)}
+.alert-ico{font-size:18px;flex-shrink:0;margin-top:1px}
+.at{font-size:13px;font-weight:700}
+.at-d{color:var(--danger-text)}.at-w{color:var(--warn-text)}.at-o{color:var(--ok-text)}.at-p{color:var(--purple-text)}.at-b{color:var(--blue-text)}
 .alert-text{font-size:13px;color:var(--text);margin-top:3px;line-height:1.45}
-
-/* Score bars */
-.sitem{margin-bottom:13px}
-.sitem:last-child{margin-bottom:0}
+.sitem{margin-bottom:12px}.sitem:last-child{margin-bottom:0}
 .shdr{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px}
-.sname{font-size:13px;color:var(--text)}
-.snum{font-size:13px;font-weight:700;color:var(--text)}
+.sname{font-size:13px;color:var(--text)}.snum{font-size:13px;font-weight:700;color:var(--text)}
 .bbar{height:5px;background:var(--border);border-radius:3px}
 .bfill{height:5px;border-radius:3px}
-
-/* Risk items */
-.risk{background:var(--surface);border-radius:var(--r-sm);padding:12px 14px;
-  display:flex;justify-content:space-between;align-items:center;margin-bottom:1px}
+.risk{background:var(--surface);border-radius:var(--r-sm);padding:11px 14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:1px}
 .rname{font-size:14px;color:var(--text)}
-.rbadge{font-size:11px;font-weight:700;padding:4px 11px;border-radius:20px}
-.rh{background:var(--danger-bg);color:var(--danger-text)}
-.rm{background:var(--warn-bg);color:var(--warn-text)}
-.rl{background:var(--ok-bg);color:var(--ok-text)}
-
-/* Actions */
-.aitem{background:var(--surface);border-radius:var(--r);padding:14px 16px;
-  margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
+.rbadge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.rh{background:var(--danger-bg);color:var(--danger-text)}.rm{background:var(--warn-bg);color:var(--warn-text)}.rl{background:var(--ok-bg);color:var(--ok-text)}
+.aitem{background:var(--surface);border-radius:var(--r);padding:13px 16px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start}
 .adot{width:9px;height:9px;border-radius:50%;margin-top:5px;flex-shrink:0}
 .atitle{font-size:14px;font-weight:600;color:var(--text)}
 .asub{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
-
-/* Timeline */
-.tlitem{display:flex;gap:12px;padding-bottom:20px;position:relative}
-.tlitem:not(:last-child)::after{content:'';position:absolute;left:16px;
-  top:34px;bottom:0;width:1px;background:var(--border)}
-.tldot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;font-size:16px;flex-shrink:0;z-index:1}
-.tlbody{flex:1;padding-top:5px}
+.tlitem{display:flex;gap:12px;padding-bottom:18px;position:relative}
+.tlitem:not(:last-child)::after{content:'';position:absolute;left:16px;top:34px;bottom:0;width:1px;background:var(--border)}
+.tldot{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;z-index:1}
+.tlbody{flex:1;padding-top:4px}
 .tldate{font-size:11px;color:var(--hint);margin-bottom:2px}
 .tltitle{font-size:14px;font-weight:600;color:var(--text)}
-.tldesc{font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4}
-
-/* Info block */
+.tldesc{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
 .iblock{background:var(--surface);border-radius:var(--r);padding:14px 16px;margin-bottom:8px}
 .ibtitle{font-size:13px;font-weight:600;color:var(--text);margin-bottom:8px}
 .ibtext{font-size:13px;color:var(--muted);line-height:1.55}
-
-/* Missing */
-.missing{background:var(--warn-bg);border-radius:var(--r-sm);padding:10px 14px;
-  font-size:12px;color:var(--warn-text);margin-top:8px;font-weight:500}
-
-/* Meds empty */
-.empty-state{text-align:center;padding:40px 20px;color:var(--muted)}
-.empty-icon{font-size:40px;margin-bottom:12px}
-.empty-title{font-size:16px;font-weight:600;color:var(--text);margin-bottom:6px}
-.empty-text{font-size:13px;line-height:1.5}
+.med-card{background:var(--surface);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.med-header{padding:12px 16px;display:flex;gap:12px;align-items:flex-start;border-bottom:0.5px solid var(--border)}
+.med-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.med-name{font-size:14px;font-weight:600;color:var(--text)}
+.med-dose{font-size:12px;color:var(--muted);margin-top:2px}
+.med-body{padding:10px 16px}
+.med-row{display:flex;gap:8px;padding:5px 0;border-bottom:0.5px solid var(--border);align-items:flex-start}
+.med-row:last-child{border-bottom:none}
+.med-key{font-size:12px;color:var(--hint);width:80px;flex-shrink:0;padding-top:1px}
+.med-val{font-size:12px;color:var(--text);flex:1;line-height:1.4}
+.food-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.food-card{background:var(--surface);border-radius:var(--r);padding:12px}
+.food-card-title{font-size:12px;font-weight:700;margin-bottom:8px}
+.fct-ok{color:var(--ok-text)}.fct-no{color:var(--danger-text)}.fct-limit{color:var(--warn-text)}
+.food-item{font-size:12px;color:var(--muted);padding:3px 0;border-bottom:0.5px solid var(--border);line-height:1.3}
+.food-item:last-child{border-bottom:none}
+.day-card{background:var(--surface);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.day-header{padding:10px 16px;background:var(--blue-bg);display:flex;justify-content:space-between;align-items:center}
+.day-name{font-size:13px;font-weight:700;color:var(--blue-text)}
+.day-note{font-size:11px;color:var(--blue-text);opacity:0.8}
+.meal-row{display:flex;gap:10px;padding:9px 16px;border-bottom:0.5px solid var(--border);align-items:flex-start}
+.meal-row:last-child{border-bottom:none}
+.meal-time{font-size:11px;color:var(--hint);width:58px;flex-shrink:0;padding-top:2px}
+.meal-text{font-size:13px;color:var(--text);flex:1;line-height:1.4}
 </style>
 </head>
 <body>
 <div class="app">
-
 <div class="scroll">
-
-<!-- HEADER (always visible) -->
 <div class="hdr">
   <div class="hdr-row">
-    <div>
-      <div class="hdr-name">Мамура Дутураева</div>
-      <div class="hdr-sub">72 года · обновлено 12.06.2026</div>
-    </div>
-    <div class="score-pill">59 / 100</div>
+    <div><div class="hdr-name">Мамура Дутураева</div><div class="hdr-sub">72 года · обновлено 13.06.2026</div></div>
+    <div class="score-pill">56 / 100</div>
   </div>
 </div>
 
-<!-- PAGE: ОБЗОР -->
+<!-- ОБЗОР -->
 <div class="page active" id="p-home">
+  <div class="sec-title">Статус</div>
 
-  <div class="sec-title">Внимание</div>
-  <div class="alert alert-danger">
-    <div class="alert-ico">⚠️</div>
-    <div>
-      <div class="alert-title">МРТ ещё не сделана</div>
-      <div class="alert-text">Эпизод головокружения с АД 162/85 на фоне стенозов сонных артерий — необходимо исключить ТИА.</div>
-    </div>
-  </div>
-  <div class="alert alert-warn">
-    <div class="alert-ico">💊</div>
-    <div>
-      <div class="alert-title-warn">Препараты не указаны</div>
-      <div class="alert-text">Добавьте список лекарств — это важно для оценки рисков и взаимодействий.</div>
-    </div>
-  </div>
+  <div class="alert a-danger"><div class="alert-ico">🧠</div><div>
+    <div class="at at-d">ТИА подтверждена неврологом</div>
+    <div class="alert-text">Диагноз: ТИА в вертебробазилярном бассейне. Риск инсульта в 90 дней — высокий. МРТ мозга ещё не сделана.</div>
+  </div></div>
 
-  <div class="sec-title">Ключевые показатели · 08.06.2026</div>
+  <div class="alert a-purple"><div class="alert-ico">⚠️</div><div>
+    <div class="at at-p">САК в 1976 г — сообщить неврологу</div>
+    <div class="alert-text">В анамнезе субарахноидальное кровоизлияние (22 года). Причина не установлена. Аневризма исключена (ангиография, Бурденко 1981). Факт САК важен для невролога при оценке антитромботической терапии.</div>
+  </div></div>
+
+  <div class="alert a-ok"><div class="alert-ico">💊</div><div>
+    <div class="at at-o">Лечение начато правильно</div>
+    <div class="alert-text">Капельницы с 08.06 (день 5). Зилт + Розулип Плюс назначены. Головокружений нет 5 дней.</div>
+  </div></div>
+
+  <div class="alert a-warn"><div class="alert-ico">🩺</div><div>
+    <div class="at at-w">АД недостаточно контролируется</div>
+    <div class="alert-text">12.06 — АД 141/79 на Валсакоре 40 мг. Цель: ниже 130/80. Обсудить дозу с врачом.</div>
+  </div></div>
+
+  <div class="sec-title">Ключевые показатели</div>
   <div class="mgrid">
-    <div class="mc">
-      <div class="mc-label">ЛПНП холестерин</div>
-      <div class="mc-val warn">3.59</div>
-      <div class="mc-norm">цель &lt;1.8 ммоль/л</div>
-      <span class="badge b-warn">Повышен</span>
-    </div>
-    <div class="mc">
-      <div class="mc-label">Фракция выброса</div>
-      <div class="mc-val ok">57%</div>
-      <div class="mc-norm">норма 55–68%</div>
-      <span class="badge b-ok">Норма</span>
-    </div>
-    <div class="mc">
-      <div class="mc-label">Стеноз ПСА</div>
-      <div class="mc-val warn">30.2%</div>
-      <div class="mc-norm">критично &gt;50%</div>
-      <span class="badge b-warn">Наблюдение</span>
-    </div>
-    <div class="mc">
-      <div class="mc-label">Глюкоза</div>
-      <div class="mc-val ok">5.33</div>
-      <div class="mc-norm">норма &lt;6.1 ммоль/л</div>
-      <span class="badge b-ok">Норма</span>
-    </div>
-    <div class="mc">
-      <div class="mc-label">АД при эпизоде</div>
-      <div class="mc-val danger">162/85</div>
-      <div class="mc-norm">обычное ~120/80</div>
-      <span class="badge b-danger">Эпизод</span>
-    </div>
-    <div class="mc">
-      <div class="mc-label">Фибриноген</div>
-      <div class="mc-val warn">483</div>
-      <div class="mc-norm">норма 200–400 мг/дл</div>
-      <span class="badge b-warn">Повышен</span>
-    </div>
+    <div class="mc"><div class="mc-label">ЛПНП холестерин</div><div class="mc-val warn">3.59</div><div class="mc-norm">цель &lt;1.4 ммоль/л</div><span class="badge b-danger">Высокий</span></div>
+    <div class="mc"><div class="mc-label">ФВ левого желудочка</div><div class="mc-val ok">57%</div><div class="mc-norm">норма 55–68%</div><span class="badge b-ok">Норма</span></div>
+    <div class="mc"><div class="mc-label">АД 12.06.2026</div><div class="mc-val warn">141/79</div><div class="mc-norm">цель &lt;130/80</div><span class="badge b-warn">Контроль</span></div>
+    <div class="mc"><div class="mc-label">Глюкоза</div><div class="mc-val ok">5.33</div><div class="mc-norm">норма &lt;6.1</div><span class="badge b-ok">Норма</span></div>
+    <div class="mc"><div class="mc-label">Стеноз ПСА</div><div class="mc-val warn">30.2%</div><div class="mc-norm">критично &gt;50%</div><span class="badge b-warn">Наблюд.</span></div>
+    <div class="mc"><div class="mc-label">Фибриноген</div><div class="mc-val warn">483</div><div class="mc-norm">норма 200–400</div><span class="badge b-warn">Повышен</span></div>
   </div>
 
   <div class="sec-title">Здоровье по системам</div>
-  <div class="card" style="padding:16px">
-    <div class="sitem"><div class="shdr"><span class="sname">Контроль АД</span><span class="snum">5/10</span></div><div class="bbar"><div class="bfill" style="width:50%;background:#FF9F0A"></div></div></div>
-    <div class="sitem"><div class="shdr"><span class="sname">Сердечно-сосудистое</span><span class="snum">6/10</span></div><div class="bbar"><div class="bfill" style="width:60%;background:#007AFF"></div></div></div>
-    <div class="sitem"><div class="shdr"><span class="sname">Сосудистое здоровье</span><span class="snum">5/10</span></div><div class="bbar"><div class="bfill" style="width:50%;background:#FF9F0A"></div></div></div>
+  <div class="card" style="padding:14px">
+    <div class="sitem"><div class="shdr"><span class="sname">Лечение / медикаменты</span><span class="snum">7/10</span></div><div class="bbar"><div class="bfill" style="width:70%;background:#34C759"></div></div></div>
     <div class="sitem"><div class="shdr"><span class="sname">Метаболизм</span><span class="snum">7/10</span></div><div class="bbar"><div class="bfill" style="width:70%;background:#34C759"></div></div></div>
-    <div class="sitem"><div class="shdr"><span class="sname">Физическая активность</span><span class="snum">4/10</span></div><div class="bbar"><div class="bfill" style="width:40%;background:#FF3B30"></div></div></div>
-    <div class="sitem"><div class="shdr"><span class="sname">Баланс и мобильность</span><span class="snum">5/10</span></div><div class="bbar"><div class="bfill" style="width:50%;background:#FF9F0A"></div></div></div>
     <div class="sitem"><div class="shdr"><span class="sname">Когнитивное здоровье</span><span class="snum">6/10</span></div><div class="bbar"><div class="bfill" style="width:60%;background:#007AFF"></div></div></div>
+    <div class="sitem"><div class="shdr"><span class="sname">Контроль АД</span><span class="snum">5/10</span></div><div class="bbar"><div class="bfill" style="width:50%;background:#FF9F0A"></div></div></div>
+    <div class="sitem"><div class="shdr"><span class="sname">Сердечно-сосудистое</span><span class="snum">5/10</span></div><div class="bbar"><div class="bfill" style="width:50%;background:#FF9F0A"></div></div></div>
+    <div class="sitem"><div class="shdr"><span class="sname">Сосудистое здоровье</span><span class="snum">4/10</span></div><div class="bbar"><div class="bfill" style="width:40%;background:#FF3B30"></div></div></div>
+    <div class="sitem"><div class="shdr"><span class="sname">Физическая активность</span><span class="snum">4/10</span></div><div class="bbar"><div class="bfill" style="width:40%;background:#FF3B30"></div></div></div>
   </div>
 
-  <div class="sec-title">Диагнозы</div>
+  <div class="sec-title">Все диагнозы</div>
   <div class="card">
-    <div class="cell"><div class="cell-ico" style="background:#FFF0EF">🫀</div><div class="cell-body"><div class="cell-label">Атеросклероз сонных артерий</div><div class="cell-sub">ТИМ 1.24 мм · стеноз ~30% с обеих сторон</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#FFF5E0">📊</div><div class="cell-body"><div class="cell-label">Дислипидемия</div><div class="cell-sub">Общий ХС 6.06 · ЛПНП 3.59 ммоль/л</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#FFF0EF">💔</div><div class="cell-body"><div class="cell-label">Недостаточность аорт. клапана I ст.</div><div class="cell-sub">ФВ 57% · гемодинамически незначимая</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#EBF4FF">🦵</div><div class="cell-body"><div class="cell-label">Варикозная болезнь вен</div><div class="cell-sub">Обе ноги · рефлюкс по БПВ</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#E8FAF0">🦴</div><div class="cell-body"><div class="cell-label">Остеохондроз · артроз коленей</div><div class="cell-sub">Поясничный/крестцовый · подошвенный фасциит</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🧠</div><div class="cell-body"><div class="cell-label">ТИА в вертебробазилярном бассейне</div><div class="cell-sub">08.06.2026 · подтверждена неврологом</div></div><span class="badge b-danger">Новый</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--purple-bg)">🩸</div><div class="cell-body"><div class="cell-label">САК в анамнезе (1976)</div><div class="cell-sub">Субарахноидальное кровоизлияние · аневризма исключена (Бурденко, 1981)</div></div><span class="badge b-purple">История</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--purple-bg)">🤕</div><div class="cell-body"><div class="cell-label">Сотрясение мозга (1990)</div><div class="cell-sub">ДТП · риск когнитивных нарушений</div></div><span class="badge b-purple">История</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🫀</div><div class="cell-body"><div class="cell-label">Атеросклероз сонных артерий</div><div class="cell-sub">ТИМ 1.24 мм · стеноз ~30%</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">📊</div><div class="cell-body"><div class="cell-label">Дислипидемия</div><div class="cell-sub">ЛПНП 3.59 · лечение начато</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">💔</div><div class="cell-body"><div class="cell-label">Недостаточность аорт. клапана I ст.</div><div class="cell-sub">ФВ 57% · незначимая</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">🦵</div><div class="cell-body"><div class="cell-label">Варикозная болезнь вен</div><div class="cell-sub">Обе ноги · рефлюкс по БПВ</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--ok-bg)">🦴</div><div class="cell-body"><div class="cell-label">Шейный остеохондроз · ВАС</div><div class="cell-sub">Вертебро-артериальный синдром</div></div></div>
   </div>
 </div>
 
-<!-- PAGE: АНАЛИЗЫ -->
+<!-- АНАЛИЗЫ -->
 <div class="page" id="p-labs">
-
   <div class="sec-title">Липидный профиль · 08.06.2026</div>
   <div class="card">
     <div class="cell"><div class="cell-body"><div class="cell-label">Общий холестерин</div><div class="cell-sub">норма &lt;5.2 ммоль/л</div></div><div class="cell-right"><div class="val warn">6.06</div><div class="val-unit">ммоль/л</div></div></div>
-    <div class="cell"><div class="cell-body"><div class="cell-label">ЛПНП</div><div class="cell-sub">цель &lt;1.8 при атеросклерозе</div></div><div class="cell-right"><div class="val danger">3.59</div><div class="val-unit">ммоль/л</div></div></div>
+    <div class="cell"><div class="cell-body"><div class="cell-label">ЛПНП</div><div class="cell-sub">цель &lt;1.4 при ТИА</div></div><div class="cell-right"><div class="val danger">3.59</div><div class="val-unit">ммоль/л</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">ЛПВП</div><div class="cell-sub">норма &gt;1.3 ммоль/л</div></div><div class="cell-right"><div class="val ok">1.53</div><div class="val-unit">ммоль/л</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">Триглицериды</div><div class="cell-sub">норма &lt;1.7 ммоль/л</div></div><div class="cell-right"><div class="val warn">2.04</div><div class="val-unit">ммоль/л</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">Индекс атерогенности</div><div class="cell-sub">норма &lt;3.0</div></div><div class="cell-right"><div class="val warn">2.96</div></div></div>
   </div>
-
-  <div class="sec-title">Коагулограмма · 08.06.2026</div>
-  <div class="card">
-    <div class="cell"><div class="cell-body"><div class="cell-label">МНО (INR)</div><div class="cell-sub">норма 0.8–1.2</div></div><div class="cell-right"><div class="val ok">1.1</div></div></div>
-    <div class="cell"><div class="cell-body"><div class="cell-label">Протромбиновое время</div><div class="cell-sub">норма 11–14 сек</div></div><div class="cell-right"><div class="val ok">12.1</div><div class="val-unit">сек</div></div></div>
-    <div class="cell"><div class="cell-body"><div class="cell-label">Фибриноген</div><div class="cell-sub">норма 200–400 мг/дл</div></div><div class="cell-right"><div class="val warn">483</div><div class="val-unit">мг/дл</div></div></div>
-  </div>
-
-  <div class="sec-title">Биохимия · 08.06.2026</div>
+  <div class="sec-title">Биохимия и ОАК · 08.06.2026</div>
   <div class="card">
     <div class="cell"><div class="cell-body"><div class="cell-label">Глюкоза</div><div class="cell-sub">норма &lt;6.1 ммоль/л</div></div><div class="cell-right"><div class="val ok">5.33</div><div class="val-unit">ммоль/л</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">Креатинин</div><div class="cell-sub">норма 53–115 мкмоль/л</div></div><div class="cell-right"><div class="val ok">67</div><div class="val-unit">мкмоль/л</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">Мочевина</div><div class="cell-sub">норма 2.5–8.3 ммоль/л</div></div><div class="cell-right"><div class="val ok">5.73</div><div class="val-unit">ммоль/л</div></div></div>
-  </div>
-
-  <div class="sec-title">Общий анализ крови · 08.06.2026</div>
-  <div class="card">
+    <div class="cell"><div class="cell-body"><div class="cell-label">Фибриноген</div><div class="cell-sub">норма 200–400 мг/дл</div></div><div class="cell-right"><div class="val warn">483</div><div class="val-unit">мг/дл</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">Гемоглобин</div><div class="cell-sub">норма 120–155 г/л</div></div><div class="cell-right"><div class="val ok">129</div><div class="val-unit">г/л</div></div></div>
-    <div class="cell"><div class="cell-body"><div class="cell-label">Лейкоциты</div><div class="cell-sub">норма 4.0–9.0 ×10⁹/л</div></div><div class="cell-right"><div class="val ok">5.54</div></div></div>
-    <div class="cell"><div class="cell-body"><div class="cell-label">Тромбоциты</div><div class="cell-sub">норма 150–400 ×10⁹/л</div></div><div class="cell-right"><div class="val ok">262</div></div></div>
+    <div class="cell"><div class="cell-body"><div class="cell-label">Тромбоциты</div><div class="cell-sub">норма 150–400</div></div><div class="cell-right"><div class="val ok">262</div></div></div>
     <div class="cell"><div class="cell-body"><div class="cell-label">СОЭ</div><div class="cell-sub">норма до 20 мм/ч</div></div><div class="cell-right"><div class="val ok">10</div><div class="val-unit">мм/ч</div></div></div>
+    <div class="cell"><div class="cell-body"><div class="cell-label">МНО (INR)</div><div class="cell-sub">норма 0.8–1.2</div></div><div class="cell-right"><div class="val ok">1.1</div></div></div>
   </div>
-
   <div class="sec-title">Инструментальные · 08.06.2026</div>
   <div class="card">
-    <div class="cell"><div class="cell-ico" style="background:#EBF4FF">❤️</div><div class="cell-body"><div class="cell-label">ФВ левого желудочка</div><div class="cell-sub">норма 55–68%</div></div><div class="cell-right"><div class="val ok">57%</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#E8FAF0">〰️</div><div class="cell-body"><div class="cell-label">ЭКГ — синусовый ритм</div><div class="cell-sub">72–75 уд/мин · без патологий</div></div><div class="cell-right"><div class="val ok" style="font-size:13px">Норма</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#FFF5E0">🔊</div><div class="cell-body"><div class="cell-label">УЗДГ сонных артерий</div><div class="cell-sub">ТИМ 1.24 мм · кровоток сохранён</div></div><div class="cell-right"><div class="val warn" style="font-size:12px">Атеросклероз</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">❤️</div><div class="cell-body"><div class="cell-label">ФВ левого желудочка</div><div class="cell-sub">ЭхоКГ · норма 55–68%</div></div><div class="cell-right"><div class="val ok">57%</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--ok-bg)">〰️</div><div class="cell-body"><div class="cell-label">ЭКГ — синусовый ритм</div><div class="cell-sub">72–75 уд/мин · без патологий</div></div><div class="cell-right"><div class="val ok" style="font-size:13px">Норма</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🔊</div><div class="cell-body"><div class="cell-label">УЗДГ сонных артерий</div><div class="cell-sub">ТИМ 1.24 мм · стеноз ~30%</div></div><div class="cell-right"><div class="val warn" style="font-size:12px">Атеросклероз</div></div></div>
   </div>
-
-  <div class="missing">⚠️ Список препаратов не заполнен — добавьте в следующем сообщении</div>
+  <div class="alert a-blue" style="margin-top:4px"><div class="alert-ico">📋</div><div>
+    <div class="at at-b">МРТ мозга — не сделана</div>
+    <div class="alert-text">После ТИА + САК в анамнезе — обязательна с ангиографией (МРА). Записать в ближайшие дни.</div>
+  </div></div>
 </div>
 
-<!-- PAGE: РИСКИ -->
-<div class="page" id="p-risks">
+<!-- ЛЕКАРСТВА -->
+<div class="page" id="p-meds">
+  <div class="sec-title">Постоянный приём</div>
 
-  <div class="sec-title">Сосудистые риски</div>
-  <div class="risk"><span class="rname">Ишемический инсульт</span><span class="rbadge rh">Высокий</span></div>
-  <div class="risk"><span class="rname">ТИА</span><span class="rbadge rh">Высокий</span></div>
-  <div class="risk"><span class="rname">Прогрессия атеросклероза</span><span class="rbadge rh">Высокий</span></div>
-  <div class="risk"><span class="rname">Инфаркт миокарда</span><span class="rbadge rm">Умеренный</span></div>
-
-  <div class="sec-title">Неврологические риски</div>
-  <div class="risk"><span class="rname">Падения и травмы</span><span class="rbadge rm">Умеренный</span></div>
-  <div class="risk"><span class="rname">Когнитивное снижение</span><span class="rbadge rm">Умеренный</span></div>
-  <div class="risk"><span class="rname">Нарушения равновесия</span><span class="rbadge rm">Умеренный</span></div>
-
-  <div class="sec-title">Возраст-ассоциированные</div>
-  <div class="risk"><span class="rname">Сердечная недостаточность</span><span class="rbadge rl">Низкий</span></div>
-  <div class="risk"><span class="rname">Аритмии</span><span class="rbadge rl">Низкий</span></div>
-  <div class="risk"><span class="rname">Потеря самостоятельности</span><span class="rbadge rl">Низкий</span></div>
-
-  <div class="sec-title">🚨 Признаки инсульта — вызывайте скорую</div>
-  <div class="iblock" style="border-left:3px solid var(--danger);border-radius:0 var(--r) var(--r) 0">
-    <div class="ibtitle" style="color:var(--danger-text)">Немедленно звоните 103 если:</div>
-    <div class="ibtext">
-      • Резкая слабость в руке или ноге (с одной стороны)<br>
-      • Перекос лица, опускается угол рта<br>
-      • Невнятная речь или непонимание слов<br>
-      • Внезапная слепота на один глаз<br>
-      • Сильная внезапная головная боль «как удар»<br>
-      • Потеря сознания или спутанность
+  <div class="med-card">
+    <div class="med-header"><div class="med-ico" style="background:var(--blue-bg)">💊</div><div><div class="med-name">Зилт 75 мг (Клопидогрел)</div><div class="med-dose">1 таб вечером во время еды</div></div></div>
+    <div class="med-body">
+      <div class="med-row"><div class="med-key">Зачем</div><div class="med-val">Антиагрегант. Главная защита от повторного инсульта после ТИА.</div></div>
+      <div class="med-row"><div class="med-key">Эффект</div><div class="med-val">Снижает риск повторной ТИА/инсульта на ~25%</div></div>
+      <div class="med-row"><div class="med-key">⚠️ САК</div><div class="med-val">Сообщить неврологу об САК 1976 г. Аневризма исключена (Бурденко, 1981). Оценить безопасность схемы.</div></div>
+      <div class="med-row"><div class="med-key">Следить</div><div class="med-val">Синяки, кровотечение дёсен, тёмный стул — немедленно к врачу</div></div>
     </div>
   </div>
 
-  <div class="sec-title">Факторы, требующие контроля</div>
+  <div class="med-card">
+    <div class="med-header"><div class="med-ico" style="background:var(--ok-bg)">💊</div><div><div class="med-name">Розулип Плюс 20/10</div><div class="med-dose">Розувастатин 20 мг + Эзетимиб 10 мг · вечером</div></div></div>
+    <div class="med-body">
+      <div class="med-row"><div class="med-key">Зачем</div><div class="med-val">Снижает холестерин двумя механизмами. Замедляет рост бляшек.</div></div>
+      <div class="med-row"><div class="med-key">Цель</div><div class="med-val">ЛПНП: с 3.59 снизить до &lt;1.4 ммоль/л</div></div>
+      <div class="med-row"><div class="med-key">Контроль</div><div class="med-val">Липиды через 6–8 нед · АЛТ/АСТ через 3 мес</div></div>
+      <div class="med-row"><div class="med-key">Побочные</div><div class="med-val">Редко — боли в мышцах. При появлении сообщить врачу.</div></div>
+    </div>
+  </div>
+
+  <div class="med-card">
+    <div class="med-header"><div class="med-ico" style="background:var(--warn-bg)">💊</div><div><div class="med-name">Валсакор 80 мг (Валсартан)</div><div class="med-dose">½ таблетки (40 мг) утром до еды</div></div></div>
+    <div class="med-body">
+      <div class="med-row"><div class="med-key">Зачем</div><div class="med-val">Снижает АД, защищает почки и сердце</div></div>
+      <div class="med-row"><div class="med-key">⚠️ Доза</div><div class="med-val">АД 141/79 — доза может быть недостаточна. Обсудить увеличение до 80 мг.</div></div>
+      <div class="med-row"><div class="med-key">Контроль</div><div class="med-val">АД дважды в день. Цель &lt;130/80. Калий и креатинин раз в 3 мес.</div></div>
+    </div>
+  </div>
+
+  <div class="med-card">
+    <div class="med-header"><div class="med-ico" style="background:var(--ok-bg)">🌞</div><div><div class="med-name">Витамин Д3 3000 МЕ + К2</div><div class="med-dose">1 таб утром во время еды</div></div></div>
+    <div class="med-body">
+      <div class="med-row"><div class="med-key">Зачем</div><div class="med-val">Кости, мышцы, иммунитет. К2 направляет кальций в кости, не в сосуды.</div></div>
+      <div class="med-row"><div class="med-key">Контроль</div><div class="med-val">25(OH)D через 3 мес. Цель 40–60 нг/мл.</div></div>
+    </div>
+  </div>
+
+  <div class="sec-title">Курс капельниц · с 08.06.2026</div>
   <div class="card">
-    <div class="cell"><div class="cell-ico" style="background:#FFF5E0">📈</div><div class="cell-body"><div class="cell-label">ЛПНП снизить до 1.8</div><div class="cell-sub">Сейчас 3.59 — почти вдвое выше цели</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#FFF0EF">🩺</div><div class="cell-body"><div class="cell-label">МРТ мозга не сделана</div><div class="cell-sub">Исключить ишемические очаги</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:#FFF5E0">🧪</div><div class="cell-body"><div class="cell-label">Фибриноген 483 мг/дл</div><div class="cell-sub">Проатромботическое состояние</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">💉</div><div class="cell-body"><div class="cell-label">Цитиколин 500 мг</div><div class="cell-sub">В/в · 10 дней · нейропротектор</div></div><span class="badge b-blue">День 5</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">💉</div><div class="cell-body"><div class="cell-label">Церебролизин 50 мл</div><div class="cell-sub">В/в струйно · 10 дней · восстановление нейронов</div></div><span class="badge b-blue">День 5</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--ok-bg)">💉</div><div class="cell-body"><div class="cell-label">Тивортин (L-аргинин) 100 мл</div><div class="cell-sub">В/в · 5 дней · расширяет сосуды мозга</div></div><span class="badge b-ok">Завершён</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--ok-bg)">💉</div><div class="cell-body"><div class="cell-label">L-лизина эсцинат</div><div class="cell-sub">В/в · 5 дней · противоотёчное</div></div><span class="badge b-ok">Завершён</span></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">💉</div><div class="cell-body"><div class="cell-label">Клексан 0.6 мл п/к</div><div class="cell-sub">Укол в живот · антикоагулянт</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--ok-bg)">🧴</div><div class="cell-body"><div class="cell-label">Долгит крем</div><div class="cell-sub">На шейный отдел · 5 раз в день</div></div></div>
+  </div>
+
+  <div class="alert a-warn"><div class="alert-ico">⚠️</div><div>
+    <div class="at at-w">Клексан + Зилт одновременно</div>
+    <div class="alert-text">Двойная антитромботическая терапия + САК в анамнезе. Следить: синяки, тёмный стул, кровь в моче. При появлении — немедленно к врачу.</div>
+  </div></div>
+</div>
+
+<!-- ПИТАНИЕ -->
+<div class="page" id="p-food">
+  <div class="sec-title">Основа питания</div>
+  <div class="alert a-ok"><div class="alert-ico">🫒</div><div>
+    <div class="at at-o">Средиземноморская диета</div>
+    <div class="alert-text">Снижает риск инсульта на 30%, уровень холестерина и воспаление в сосудах. Доказанно эффективна при ТИА и атеросклерозе.</div>
+  </div></div>
+
+  <div class="sec-title">Можно и нужно</div>
+  <div class="food-grid">
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Рыба</div><div class="food-item">Лосось, скумбрия</div><div class="food-item">Сардины, форель</div><div class="food-item">Треска, судак</div><div class="food-item">Тунец (в воде)</div></div>
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Овощи</div><div class="food-item">Брокколи, шпинат</div><div class="food-item">Помидоры, огурцы</div><div class="food-item">Перец, кабачки</div><div class="food-item">Чеснок, зелень</div></div>
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Жиры</div><div class="food-item">Оливковое масло</div><div class="food-item">Авокадо</div><div class="food-item">Грецкие орехи</div><div class="food-item">Миндаль, чиа</div></div>
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Крупы</div><div class="food-item">Овсянка, гречка</div><div class="food-item">Бурый рис, булгур</div><div class="food-item">Чечевица, нут</div><div class="food-item">Цельнозерн. хлеб</div></div>
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Фрукты</div><div class="food-item">Черника, вишня</div><div class="food-item">Яблоки, груши</div><div class="food-item">Гранат, киви</div><div class="food-item">Цитрусовые</div></div>
+    <div class="food-card"><div class="food-card-title fct-ok">✅ Молочное</div><div class="food-item">Йогурт натур.</div><div class="food-item">Творог 2–5%</div><div class="food-item">Кефир, простокв.</div><div class="food-item">Сыр (немного)</div></div>
+  </div>
+
+  <div class="sec-title">Ограничить</div>
+  <div class="card">
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🥩</div><div class="cell-body"><div class="cell-label">Красное мясо</div><div class="cell-sub">Не чаще 1–2 раз в неделю · нежирные части</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🥚</div><div class="cell-body"><div class="cell-label">Яйца</div><div class="cell-sub">До 4–5 в неделю · варёные или омлет без масла</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🍗</div><div class="cell-body"><div class="cell-label">Курица, индейка</div><div class="cell-sub">Без кожи · варить, запекать, тушить</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🍞</div><div class="cell-body"><div class="cell-label">Белый хлеб, белый рис</div><div class="cell-sub">Заменять цельнозерновыми вариантами</div></div></div>
+  </div>
+
+  <div class="sec-title">Категорически нельзя</div>
+  <div class="card">
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🧂</div><div class="cell-body"><div class="cell-label">Соль более 5 г в день</div><div class="cell-sub">Убрать солонку · не досаливать готовое</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🥓</div><div class="cell-body"><div class="cell-label">Колбасы, сосиски, бекон</div><div class="cell-sub">Трансжиры + соль — повышают риск инсульта</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🍟</div><div class="cell-body"><div class="cell-label">Жареное в масле</div><div class="cell-sub">Только варка, тушение, запекание, пар</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🧁</div><div class="cell-body"><div class="cell-label">Выпечка, торты, сладости</div><div class="cell-sub">Повышают ЛПНП и триглицериды</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🥤</div><div class="cell-body"><div class="cell-label">Газировка, пакетные соки</div><div class="cell-sub">Скрытый сахар повышает триглицериды</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🍺</div><div class="cell-body"><div class="cell-label">Алкоголь — полностью</div><div class="cell-sub">После ТИА + САК в анамнезе — исключить полностью</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">🧈</div><div class="cell-body"><div class="cell-label">Сливочное масло, маргарин</div><div class="cell-sub">Заменить на оливковое масло</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">☕</div><div class="cell-body"><div class="cell-label">Кофе более 1 чашки в день</div><div class="cell-sub">Повышает АД · при 141/79 особенно важно</div></div></div>
+  </div>
+
+  <div class="sec-title">Меню на неделю</div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Понедельник</div><div class="day-note">Рыбный день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Овсянка на воде с черникой и грецкими орехами · зелёный чай</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Запечённый лосось с брокколи · бурый рис · салат из помидоров с оливковым маслом</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Яблоко · горсть миндаля (20 шт)</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Чечевичный суп с морковью · цельнозерновой хлеб</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Вторник</div><div class="day-note">Бобовый день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Гречневая каша · кефир · киви</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Куриная грудка варёная · нут со шпинатом и чесноком</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Натуральный йогурт без сахара · груша</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Скумбрия запечённая с лимоном · салат из огурцов и зелени</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Среда</div><div class="day-note">Овощной день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Омлет из 2 яиц с помидорами без масла · цельнозерновой хлеб</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Суп-пюре из брокколи · булгур с тушёными баклажанами</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Творог 2% с черникой · грецкие орехи</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Тушёная индейка с кабачками · салат с оливковым маслом</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Четверг</div><div class="day-note">Рыбный день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Овсянка с яблоком и корицей · травяной чай</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Уха из судака без зажарки · гречка · помидоры</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Гранат · горсть миндаля</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Фасоль тушёная с овощами и чесноком · цельнозерновой хлеб</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Пятница</div><div class="day-note">Лёгкий день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Творог с льняным семенем и ягодами · зелёный чай</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Тунец в воде с бурым рисом · салат с авокадо</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Кефир · яблоко</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Запечённые овощи с оливковым маслом · нут</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Суббота</div><div class="day-note">Семейный день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Гречневые блины без масла со сметаной 10% · ягоды</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Запечённая курица без кожи с овощами · зелёный салат</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Фруктовый салат · йогурт</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Форель на пару с лимоном · брокколи варёная</div></div>
+  </div>
+  <div class="day-card">
+    <div class="day-header"><div class="day-name">Воскресенье</div><div class="day-note">Восстановит. день</div></div>
+    <div class="meal-row"><div class="meal-time">Завтрак</div><div class="meal-text">Овсянка с орехами, мёдом (1 ч.л.) и яблоком</div></div>
+    <div class="meal-row"><div class="meal-time">Обед</div><div class="meal-text">Чечевичный плов с морковью · салат из огурцов</div></div>
+    <div class="meal-row"><div class="meal-time">Полдник</div><div class="meal-text">Творог с черникой · миндаль</div></div>
+    <div class="meal-row"><div class="meal-time">Ужин</div><div class="meal-text">Сардины запечённые · бурый рис · помидоры с оливковым маслом</div></div>
+  </div>
+
+  <div class="iblock" style="margin-top:8px">
+    <div class="ibtitle">Правила за столом</div>
+    <div class="ibtext">🥤 Вода: 1.5–2 л в день · пить между едой<br><br>🧂 Соль: готовить без соли · чуть досолить при подаче<br><br>🍽️ Порции: небольшие · 4–5 раз в день · есть медленно<br><br>🫒 Масло: только оливковое · 2–3 ст. ложки в день<br><br>🌿 Специи: куркума, имбирь, чеснок — снижают холестерин<br><br>☕ Напитки: зелёный чай, травяные, вода · кофе макс 1 чашка утром</div>
   </div>
 </div>
 
-<!-- PAGE: ЗАДАЧИ -->
+<!-- ЗАДАЧИ -->
 <div class="page" id="p-tasks">
-
-  <div class="sec-title">🔴 Срочно — 1–2 недели</div>
-  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">МРТ головного мозга + МРА</div><div class="asub">Исключить ТИА и ишемические очаги. Оценить вертебробазилярный бассейн.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">Статины — обсудить с врачом</div><div class="asub">ЛПНП 3.59 при подтверждённом атеросклерозе — показание к терапии. Цель ЛПНП &lt;1.8.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">Ежедневный контроль АД</div><div class="asub">Утром и вечером. Записывать значения. Передавать врачу.</div></div></div>
+  <div class="sec-title">🔴 Срочно</div>
+  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">МРТ мозга + МРА (ангиография)</div><div class="asub">После ТИА + САК в анамнезе — обязательна. Аневризма ранее исключена (1981), но МРТ оценит текущее состояние сосудов. Записать в ближайшие 3–5 дней.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">Сообщить неврологу о САК 1976 г</div><div class="asub">На ближайшем визите. Влияет на оценку безопасности Клексана + Зилта.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">АД дважды в день — записывать</div><div class="asub">Утром до Валсакора и вечером. Цель &lt;130/80.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--danger)"></div><div><div class="atitle">Зилт не прерывать</div><div class="asub">Главная защита от повторного инсульта. Только по назначению врача.</div></div></div>
 
   <div class="sec-title">🟡 В течение 30 дней</div>
-  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Повторный невролог с МРТ</div><div class="asub">Вопрос антиагрегантов (аспирин / клопидогрел).</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Консультация флеболога</div><div class="asub">Риск тромбоза вен при сниженной активности.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Начать ежедневные прогулки</div><div class="asub">15–20 мин, медленно, по ровной поверхности, с сопровождением.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Невролог после курса капельниц</div><div class="asub">Оценить эффект. Скорректировать терапию с учётом анамнеза.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Обсудить дозу Валсакора</div><div class="asub">При АД выше 130/80 — возможно увеличение до 80 мг.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--warn)"></div><div><div class="atitle">Ежедневные прогулки</div><div class="asub">15–20 мин, медленно, с сопровождением.</div></div></div>
 
   <div class="sec-title">🔵 В течение 90 дней</div>
-  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Повторный липидный профиль</div><div class="asub">Оценить эффект статинов.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">МРТ шейного отдела</div><div class="asub">Подтвердить вертеброгенный компонент головокружения.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Офтальмолог (глазное дно)</div><div class="asub">Оценка сосудов сетчатки — маркер системного атеросклероза.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Денситометрия (DXA)</div><div class="asub">Исключить остеопороз, оценить риск переломов.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Липиды через 6–8 недель</div><div class="asub">Проверить эффект Розулипа. Цель ЛПНП &lt;1.4.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">МРТ шейного отдела позвоночника</div><div class="asub">Подтвердить вертеброгенный компонент ТИА.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Офтальмолог (глазное дно)</div><div class="asub">Сосуды сетчатки — маркер атеросклероза и АД.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">Денситометрия DXA · 25(OH)D</div><div class="asub">Кости и витамин Д. Цель Д3: 40–60 нг/мл.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--blue)"></div><div><div class="atitle">АЛТ/АСТ (печень)</div><div class="asub">Контроль на фоне розувастатина.</div></div></div>
 
-  <div class="sec-title">🟢 Постоянно</div>
-  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">Средиземноморская диета</div><div class="asub">Рыба, оливковое масло, овощи, орехи. Ограничить красное мясо и соль.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">1.5–2 литра воды в день</div><div class="asub">Обезвоживание сгущает кровь и повышает риск ТИА.</div></div></div>
-  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">Дневник симптомов</div><div class="asub">Фиксировать головокружение: когда, при каком движении, насколько сильно.</div></div></div>
+  <div class="sec-title">🟢 Ежедневно</div>
+  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">Питание по меню</div><div class="asub">Средиземноморская диета. Без соли, жарки, колбас, алкоголя.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">1.5–2 л воды в день</div><div class="asub">Обезвоживание сгущает кровь — риск повторной ТИА.</div></div></div>
+  <div class="aitem"><div class="adot" style="background:var(--ok)"></div><div><div class="atitle">Дневник симптомов</div><div class="asub">Головокружение, слабость, онемение, нарушения речи — записывать.</div></div></div>
 </div>
 
-<!-- PAGE: ИСТОРИЯ -->
+<!-- ИСТОРИЯ -->
 <div class="page" id="p-history">
+  <div class="sec-title">Важный анамнез</div>
 
-  <div class="sec-title">Хронология событий</div>
+  <div class="alert a-purple"><div class="alert-ico">🩸</div><div>
+    <div class="at at-p">САК 1976 — критически важно</div>
+    <div class="alert-text">Субарахноидальное кровоизлияние в 22 года. Причина не установлена окончательно. Аневризма исключена ангиографией в институте Бурденко (1981). Влияет на общую оценку сосудов мозга.</div>
+  </div></div>
 
-  <div class="tlitem">
-    <div class="tldot" style="background:var(--danger-bg)">⚡</div>
-    <div class="tlbody">
-      <div class="tldate">Июнь 2026</div>
-      <div class="tltitle">Острый эпизод головокружения</div>
-      <div class="tldesc">АД 162/85. Невозможность ходить самостоятельно. Вызов скорой. Симптомы частично купированы. Кардиолог — значимой причины не нашёл. Невролог — вертеброгенное нарушение кровообращения.</div>
-    </div>
-  </div>
+  <div class="sec-title">Хронология всех событий</div>
 
-  <div class="tlitem">
-    <div class="tldot" style="background:var(--blue-bg)">🔬</div>
-    <div class="tlbody">
-      <div class="tldate">08 июня 2026</div>
-      <div class="tltitle">Комплексное обследование</div>
-      <div class="tldesc">ЭхоКГ, ЭКГ, УЗДГ сонных артерий, ОАК, биохимия, коагулограмма, липидный профиль. Выявлены атеросклероз, дислипидемия, повышенный фибриноген.</div>
-    </div>
-  </div>
+  <div class="tlitem"><div class="tldot" style="background:var(--purple-bg)">🩸</div><div class="tlbody"><div class="tldate">01 июня 1976 (22 года)</div><div class="tltitle">Субарахноидальное кровоизлияние</div><div class="tldesc">Госпитализация на 1 месяц. Причина не установлена окончательно. Аневризма исключена ангиографией в институте Бурденко (Москва, 1981). Выписана.</div></div></div>
 
-  <div class="tlitem">
-    <div class="tldot" style="background:var(--ok-bg)">📋</div>
-    <div class="tlbody">
-      <div class="tldate">12 июня 2026</div>
-      <div class="tltitle">Начало проекта мониторинга</div>
-      <div class="tldesc">Создана медицинская карта. Health Score: 59/100. Главные приоритеты: профилактика инсульта, инфаркта, когнитивного снижения и падений.</div>
-    </div>
+  <div class="tlitem"><div class="tldot" style="background:var(--purple-bg)">🤕</div><div class="tlbody"><div class="tldate">1990 (37 лет)</div><div class="tltitle">Сотрясение мозга в ДТП</div><div class="tldesc">Травма головы. Повышает риск когнитивных нарушений в пожилом возрасте.</div></div></div>
+
+  <div class="tlitem"><div class="tldot" style="background:var(--danger-bg)">⚡</div><div class="tlbody"><div class="tldate">Июнь 2026 (72 года)</div><div class="tltitle">Острый эпизод — ТИА</div><div class="tldesc">АД 162/85. Невозможность ходить. Скорая. Невролог подтвердил ТИА в вертебробазилярном бассейне на фоне шейного остеохондроза и ВАС.</div></div></div>
+
+  <div class="tlitem"><div class="tldot" style="background:var(--blue-bg)">🔬</div><div class="tlbody"><div class="tldate">08 июня 2026</div><div class="tltitle">Комплексное обследование</div><div class="tldesc">ЭхоКГ (ФВ 57%), ЭКГ норма, УЗДГ (стеноз 30%, ТИМ 1.24), ОАК, биохимия, липиды (ЛПНП 3.59), коагулограмма (фибриноген 483).</div></div></div>
+
+  <div class="tlitem"><div class="tldot" style="background:var(--ok-bg)">💊</div><div class="tlbody"><div class="tldate">08 июня 2026</div><div class="tltitle">Начало лечения</div><div class="tldesc">Курс капельниц 10 дней. Назначены: Зилт 75 мг, Розулип Плюс 20/10, Клексан 0.6 п/к, Долгит крем на шею.</div></div></div>
+
+  <div class="tlitem"><div class="tldot" style="background:var(--warn-bg)">📈</div><div class="tlbody"><div class="tldate">12 июня 2026</div><div class="tltitle">АД 141/79 после обеда</div><div class="tldesc">Подъём на фоне Валсакора 40 мг. Вероятная причина — Кетопрофен (3-дневный курс). После отмены НПВС ожидается улучшение.</div></div></div>
+
+  <div class="tlitem"><div class="tldot" style="background:var(--ok-bg)">✅</div><div class="tlbody"><div class="tldate">13 июня 2026</div><div class="tltitle">День 5 капельниц — без головокружений</div><div class="tldesc">Самочувствие хорошее. Умеренная слабость. Головокружений нет 5 дней. Ходит самостоятельно.</div></div></div>
+
+  <div class="sec-title">🚨 Признаки инсульта — звонить 103</div>
+  <div class="iblock" style="border-left:3px solid var(--danger);border-radius:0 var(--r) var(--r) 0">
+    <div class="ibtitle" style="color:var(--danger-text)">Немедленно вызывайте скорую если:</div>
+    <div class="ibtext">• Резкая слабость в руке или ноге с одной стороны<br>• Перекос лица, опускается угол рта<br>• Невнятная речь или непонимание слов<br>• Внезапная слепота на один глаз<br>• Сильная внезапная головная боль «как удар»<br>• Потеря сознания или спутанность</div>
   </div>
 
   <div class="sec-title">График мониторинга</div>
   <div class="card">
-    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">📅</div><div class="cell-body"><div class="cell-label">Еженедельно</div><div class="cell-sub">АД · ЧСС · симптомы головокружения</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🔬</div><div class="cell-body"><div class="cell-label">Каждые 3 месяца</div><div class="cell-sub">Липиды · ОАК · биохимия</div></div></div>
-    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">🏥</div><div class="cell-body"><div class="cell-label">Каждые 6–12 месяцев</div><div class="cell-sub">УЗДГ сонных артерий · ЭхоКГ · кардиолог</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--danger-bg)">📅</div><div class="cell-body"><div class="cell-label">Ежедневно</div><div class="cell-sub">АД утром и вечером · симптомы</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🔬</div><div class="cell-body"><div class="cell-label">Через 6–8 недель</div><div class="cell-sub">Липиды · АЛТ/АСТ · эффект Розулипа</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--warn-bg)">🔬</div><div class="cell-body"><div class="cell-label">Через 3 месяца</div><div class="cell-sub">ОАК · биохимия · 25(OH)D · калий</div></div></div>
+    <div class="cell"><div class="cell-ico" style="background:var(--blue-bg)">🏥</div><div class="cell-body"><div class="cell-label">Через 6–12 месяцев</div><div class="cell-sub">УЗДГ сонных артерий · ЭхоКГ · кардиолог</div></div></div>
   </div>
 
-  <div class="sec-title">Вопросы для врачей</div>
+  <div class="sec-title">Вопросы для невролога</div>
   <div class="iblock">
     <div class="ibtext">
-      1. Был ли эпизод ТИА? Нужна МРТ с сосудистой программой.<br><br>
-      2. Показаны ли статины? Какой препарат и доза?<br><br>
-      3. Нужен ли антиагрегант (аспирин, клопидогрел)?<br><br>
-      4. Есть ли хроническая АГ или давление ситуативное?<br><br>
-      5. Нужна ли УЗДГ вертебральных артерий?
+      1. Знаете ли вы о перенесённом САК в 1976 году?<br><br>
+      2. Нужна ли МРТ с ангиографией (МРА) для оценки состояния сосудов мозга? (аневризма исключена в 1981 г. в Бурденко)<br><br>
+      3. Безопасна ли двойная антитромботическая терапия (Клексан + Зилт) с учётом перенесённого САК 1976 г.?<br><br>
+      4. Нужна ли УЗДГ вертебральных артерий?<br><br>
+      5. Показана ли когнитивная оценка (тест MMSE или MoCA)?
     </div>
   </div>
 </div>
 
-</div><!-- /scroll -->
-
-<!-- BOTTOM NAV -->
-<nav class="nav">
-  <button class="nav-btn active" onclick="nav(this,'p-home')">
-    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
-    Обзор
-  </button>
-  <button class="nav-btn" onclick="nav(this,'p-labs')">
-    <svg viewBox="0 0 24 24"><path d="M9 3v11.5a3.5 3.5 0 007 0V3"/><line x1="6" y1="3" x2="18" y2="3"/><path d="M7 16.5c0 1.5 2.5 3 5 3s5-1.5 5-3"/></svg>
-    Анализы
-  </button>
-  <button class="nav-btn" onclick="nav(this,'p-risks')">
-    <svg viewBox="0 0 24 24"><path d="M12 2l.5.5 9 15.5a1 1 0 01-.87 1.5H3.37a1 1 0 01-.87-1.5L12 2z"/><line x1="12" y1="9" x2="12" y2="13"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
-    Риски
-  </button>
-  <button class="nav-btn" onclick="nav(this,'p-tasks')">
-    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/><path d="M8 3v4M16 3v4"/><path d="M8 14l2 2 4-4"/></svg>
-    Задачи
-  </button>
-  <button class="nav-btn" onclick="nav(this,'p-history')">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
-    История
-  </button>
-</nav>
-
 </div>
-
+<nav class="nav">
+  <button class="nav-btn active" onclick="nav(this,'p-home')"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>Обзор</button>
+  <button class="nav-btn" onclick="nav(this,'p-labs')"><svg viewBox="0 0 24 24"><path d="M9 3v11.5a3.5 3.5 0 007 0V3"/><line x1="6" y1="3" x2="18" y2="3"/></svg>Анализы</button>
+  <button class="nav-btn" onclick="nav(this,'p-meds')"><svg viewBox="0 0 24 24"><path d="M12 2a5 5 0 015 5v1h1a3 3 0 010 6h-1v1a5 5 0 01-10 0v-1H6a3 3 0 010-6h1V7a5 5 0 015-5z"/></svg>Лекарства</button>
+  <button class="nav-btn" onclick="nav(this,'p-food')"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 4-3 6-4 8H9c-1-2-4-4-4-8a7 7 0 017-7z"/><line x1="9" y1="21" x2="15" y2="21"/><line x1="10" y1="17" x2="14" y2="17"/></svg>Питание</button>
+  <button class="nav-btn" onclick="nav(this,'p-tasks')"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/><path d="M8 14l2 2 4-4"/></svg>Задачи</button>
+  <button class="nav-btn" onclick="nav(this,'p-history')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>История</button>
+</nav>
+</div>
 <script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('sw.js').catch(()=>{});
-}
-
-function nav(btn, pageId){
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+function nav(btn,pageId){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
   document.getElementById(pageId).classList.add('active');
